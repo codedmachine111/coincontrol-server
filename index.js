@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin: true}));
 
 const userRouter = require('./routes/User');
 app.use('/auth', userRouter);

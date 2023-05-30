@@ -50,7 +50,6 @@ router.post("/signup", async (req, res) => {
   const user = await prisma.User.findFirst({
     where: {
       username,
-      email,
     },
   });
 
