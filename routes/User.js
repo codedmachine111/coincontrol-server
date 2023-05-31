@@ -10,11 +10,10 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 router.post("/login", async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password } = req.body;
   const user = await prisma.user.findFirst({
     where: {
       username: username,
-      email: email,
     },
   });
 
@@ -41,8 +40,48 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/verify", validateToken, (req, res) => {
-  res.json({ user: req.user });
+router.get("/verify", validateToken, async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        income: true,
+      },
+    });
+
+    if (user) {
+      res.json({ user });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to verify user" });
+  }
+});
+
+router.put("/update", validateToken, async (req, res) => {
+  const { userId, income } = req.body;
+  
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        income: income,
+      },
+    });
+
+    res.json({ message: "Income updated successfully", user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update income" });
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -60,6 +99,7 @@ router.post("/signup", async (req, res) => {
         username: username,
         password: hash,
         email: email,
+        income: 0,
       },
     });
     res.json({ message: "User Created!" });
