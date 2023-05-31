@@ -52,6 +52,8 @@ router.get("/verify", validateToken, async (req, res) => {
         username: true,
         email: true,
         income: true,
+        credit: true,
+        expenses: true,
       },
     });
 
@@ -66,7 +68,7 @@ router.get("/verify", validateToken, async (req, res) => {
 });
 
 router.put("/update", validateToken, async (req, res) => {
-  const { userId, income } = req.body;
+  const { userId, income, credit, expenses } = req.body;
   
   try {
     const updatedUser = await prisma.user.update({
@@ -75,6 +77,8 @@ router.put("/update", validateToken, async (req, res) => {
       },
       data: {
         income: income,
+        expenses: expenses,
+        credit: credit,
       },
     });
 
@@ -100,6 +104,8 @@ router.post("/signup", async (req, res) => {
         password: hash,
         email: email,
         income: 0,
+        credit: 0,
+        expenses: 0,
       },
     });
     res.json({ message: "User Created!" });

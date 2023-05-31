@@ -14,6 +14,8 @@ model User {
   username  String    @unique
   password  String
   income    Int
+  credit    Int
+  expenses  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   transactions     Transaction[]
@@ -21,9 +23,9 @@ model User {
 
 model Transaction {
   id       Int      @id @default(autoincrement())
-  date     DateTime
   amount   Decimal
   category String
+  createdAt DateTime @default(now())
   userId   Int
   user     User     @relation(fields: [userId], references: [id])
 }
