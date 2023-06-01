@@ -33,4 +33,18 @@ router.post("/add", validateToken, async (req, res) => {
     }
 })
 
+router.delete("/delete/:id", validateToken, async (req, res) => {
+    const transactionId = req.params.id;
+    const transaction = await prisma.transaction.delete({
+        where: {
+            id: parseInt(transactionId),
+        },
+    });
+
+    if (transaction) {
+        res.json({ message: "Transaction deleted successfully" });
+    } else {
+        res.json({ message: "Failed to delete transaction" });
+    }
+})
 module.exports = router;
