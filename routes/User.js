@@ -82,7 +82,7 @@ router.put("/update", validateToken, async (req, res) => {
       },
     });
 
-    res.json({ message: "Income updated successfully", user: updatedUser });
+    res.json({ message: "User Data updated successfully", user: updatedUser });
   } catch (error) {
     res.status(500).json({ error: "Failed to update income" });
   }

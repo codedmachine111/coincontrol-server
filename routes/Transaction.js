@@ -47,4 +47,25 @@ router.delete("/delete/:id", validateToken, async (req, res) => {
         res.json({ message: "Failed to delete transaction" });
     }
 })
+
+// A ROUTE TO UPDATE TRANSACTION DETAILS
+router.put("/update", validateToken, async (req, res) => {
+    const { id, amount, category } = req.body;
+    const transaction = await prisma.transaction.update({
+        where: {
+            id: parseInt(id),
+        },
+        data: {
+            amount: amount,
+            category: category,
+        },
+    });
+
+    if (transaction) {
+        res.json({ message: "Transaction updated successfully" });
+    } else {
+        res.json({ message: "Failed to update transaction" });
+    }
+});
+
 module.exports = router;
